@@ -15,9 +15,9 @@ func InitiateProductPostGresRepository(db *gorm.DB) repositories.ProductReposito
 }
 
 func (ppr *ProductPostgresRepository) CreateProduct(p entities.Product) error {
-	query := "INSERT INTO public.products(p_id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location)VALUES ($1, $2, $3, $4, $5, $6);"
+	query := "INSERT INTO public.products(p_id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location)VALUES ($1, $2, $3, $4, $5, $6, $7, $8);"
 
-	err := ppr.db.Exec(query, p.P_name, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3, p.P_location)
+	err := ppr.db.Exec(query, p.P_id, p.P_name, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3, p.P_location)
 	if err != nil {
 		return err.Error
 	}

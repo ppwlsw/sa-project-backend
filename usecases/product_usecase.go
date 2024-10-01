@@ -17,7 +17,7 @@ type ProductService struct {
 	repo repositories.ProductRepository
 }
 
-func InitiateProducts(repo repositories.ProductRepository) ProductUsecase {
+func InitiateProductsService(repo repositories.ProductRepository) ProductUsecase {
 	return &ProductService{
 		repo: repo,
 	}
