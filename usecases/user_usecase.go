@@ -39,7 +39,7 @@ func (us *UserService) GetUserByID(id int) (entities.User, error) {
 		return entities.User{}, err
 	}
 
-	return user, err
+	return user, nil
 }
 
 func (us *UserService) GetAllUsers() ([]entities.User, error) {
