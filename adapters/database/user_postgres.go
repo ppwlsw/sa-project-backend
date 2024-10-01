@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"gorm.io/gorm"
 )
 
@@ -9,7 +10,7 @@ type UserPostgresRepository struct {
 	db *gorm.DB
 }
 
-func ProvideUserPostgresRepository(db *gorm.DB) *UserPostgresRepository {
+func ProvideUserPostgresRepository(db *gorm.DB) repositories.UserRepository {
 	return &UserPostgresRepository{db: db}
 }
 
