@@ -1,6 +1,10 @@
 package entities
 
-type Transaction struct {
-	transaction_id int `json:"transaction_id"`
+import "time"
 
+type Transaction struct {
+	Transaction_id int       `json:"transaction_id"`
+	T_time_stamp   time.Time `json:"t_time_stamp"`
+	T_net_price    float64   `json:"t_net_price"`
+	T_image_url    string    `json:"t_image_url"`
 }

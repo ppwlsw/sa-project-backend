@@ -15,9 +15,9 @@ func InitiateProductPostGresRepository(db *gorm.DB) repositories.ProductReposito
 }
 
 func (ppr *ProductPostgresRepository) CreateProduct(p entities.Product) error {
-	query := "INSERT INTO public.products(p_id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location)VALUES ($1, $2, $3, $4, $5, $6, $7, $8);"
+	query := "INSERT INTO public.products(id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location)VALUES ($1, $2, $3, $4, $5, $6, $7, $8);"
 
-	err := ppr.db.Exec(query, p.P_id, p.P_name, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3, p.P_location)
+	err := ppr.db.Exec(query, p.Id, p.P_name, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3, p.P_location)
 	if err != nil {
 		return err.Error
 	}
@@ -28,7 +28,7 @@ func (ppr *ProductPostgresRepository) CreateProduct(p entities.Product) error {
 func (ppr *ProductPostgresRepository) GetProductByID(id int) (entities.Product, error) {
 	var product entities.Product
 
-	query := "SELECT p_id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location FROM public.products WHERE p_id = $1;"
+	query := "SELECT id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location FROM public.products WHERE id = $1;"
 
 	result := ppr.db.Raw(query, id).Scan(&product)
 
@@ -40,7 +40,7 @@ func (ppr *ProductPostgresRepository) GetProductByID(id int) (entities.Product, 
 }
 
 func (ppr *ProductPostgresRepository) GetAllProducts() ([]entities.Product, error) {
-	query := "SELECT p_id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location FROM public.products;"
+	query := "SELECT id, p_name, p_amount, p_price, image_url_1, image_url_2, image_url_3, p_location FROM public.products;"
 	var products []entities.Product
 
 	result := ppr.db.Raw(query).Scan(&products)

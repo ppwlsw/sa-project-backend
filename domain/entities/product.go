@@ -1,7 +1,7 @@
 package entities
 
 type Product struct {
-	P_id        int     `json:"p_id"`
+	Id          int     `json:"id"`
 	P_name      string  `json:"p_name"`
 	P_location  string  `json:"p_location"`
 	P_amount    int     `json:"p_amount"`
