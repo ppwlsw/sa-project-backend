@@ -18,7 +18,11 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	productService := usecases.InitiateProductsService(productRepo)
 	productHandler := api.InitiateProductHandler(productService)
 
-	handlers := api.ProvideHandlers(userHandler, productHandler)
+	transactionRepo := database.InitiateTransactionPostGresRepository(db)
+	transactionService := usecases.InitiateTransactionService(transactionRepo)
+	transactionHandler := api.InitiateTransactionHandler(transactionService)
+
+	handlers := api.ProvideHandlers(userHandler, productHandler, transactionHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -32,6 +36,13 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	//Product
 	app.Post("/products", handlers.ProductHandler.CreateProduct)
 	app.Get("/products", handlers.ProductHandler.GetAllProducts)
-	app.Get("products/:id", handlers.ProductHandler.GetUserByID)
+	app.Get("products/:id", handlers.ProductHandler.GetProductByID)
+
+	//Transaction
+	app.Post("/transaction", handlers.TransactionHandler.CreateTransaction)
+	app.Post("/transactions", handlers.TransactionHandler.CreateTransaction)
+	app.Get("/transactions", handlers.TransactionHandler.GetAllTransactions)
+	app.Get("/transaction/:id", handlers.TransactionHandler.GetTransactionById)
+	app.Put("/transaction/:id", handlers.TransactionHandler.UpdateTransaction)
 
 }

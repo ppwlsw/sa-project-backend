@@ -34,7 +34,7 @@ func main() {
 
 	db.AutoMigrate(&entities.User{})
 	db.AutoMigrate(&entities.Product{})
-
+	db.AutoMigrate(&entities.Transaction{})
 	router.SetUpRouters(app, db)
 
 	app.Listen(":8000")

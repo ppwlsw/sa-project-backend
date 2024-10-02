@@ -35,28 +35,28 @@ func (ph *ProductHandler) CreateProduct(c *fiber.Ctx) error {
 	})
 }
 
-func (ph *ProductHandler) GetUserByID(c *fiber.Ctx) error {
+func (ph *ProductHandler) GetProductByID(c *fiber.Ctx) error {
 	idParams, err := strconv.Atoi(c.Params("id"))
 
 	if err != nil {
 		return errors.New(err.Error())
 	}
 
-	user, err := ph.ProductUsecase.GetProductByID(idParams)
+	product, err := ph.ProductUsecase.GetProductByID(idParams)
 
 	if err != nil {
 		return errors.New(err.Error())
 	}
 
-	return c.JSON(user)
+	return c.JSON(product)
 }
 
 func (ph *ProductHandler) GetAllProducts(c *fiber.Ctx) error {
-	users, err := ph.ProductUsecase.GetAllProducts()
+	products, err := ph.ProductUsecase.GetAllProducts()
 
 	if err != nil {
 		return errors.New(err.Error())
 	}
 
-	return c.JSON(users)
+	return c.JSON(products)
 }
