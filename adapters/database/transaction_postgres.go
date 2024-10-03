@@ -17,11 +17,11 @@ func InitiateTransactionPostGresRepository(db *gorm.DB) repositories.Transaction
 }
 
 func (tpr *TransactionPostgresRepository) CreateTransaction(t entities.Transaction) (entities.Transaction, error) {
-	query := "INSERT INTO public.transactions(id, t_time_stamp, t_net_price, t_image_url) VALUES ($1, $2, $3, $4) RETURNING id, t_time_stamp, t_net_price, t_image_url;"
+	query := "INSERT INTO public.transactions(t_time_stamp, t_net_price, t_image_url) VALUES ($1, $2, $3) RETURNING id, t_time_stamp, t_net_price, t_image_url;"
 
 	var transaction entities.Transaction
 
-	result := tpr.db.Raw(query, t.Id, t.T_time_stamp, t.T_net_price, t.T_image_url).Scan(&transaction)
+	result := tpr.db.Raw(query, t.T_time_stamp, t.T_net_price, t.T_image_url).Scan(&transaction)
 
 	if result.Error != nil {
 		return entities.Transaction{}, result.Error
