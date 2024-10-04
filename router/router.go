@@ -36,7 +36,8 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	//Product
 	app.Post("/products", handlers.ProductHandler.CreateProduct)
 	app.Get("/products", handlers.ProductHandler.GetAllProducts)
-	app.Get("products/:id", handlers.ProductHandler.GetProductByID)
+	app.Get("product/:id", handlers.ProductHandler.GetProductByID)
+	app.Put("products/:id", handlers.ProductHandler.UpdateProduct)
 
 	//Transaction
 	app.Post("/transaction", handlers.TransactionHandler.CreateTransaction)

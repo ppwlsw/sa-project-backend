@@ -11,6 +11,7 @@ type ProductUsecase interface {
 	CreateProduct(p entities.Product) error
 	GetProductByID(id int) (entities.Product, error)
 	GetAllProducts() ([]entities.Product, error)
+	UpdateProduct(id int, p entities.Product) (entities.Product, error)
 }
 
 type ProductService struct {
@@ -49,4 +50,14 @@ func (ps *ProductService) GetAllProducts() ([]entities.Product, error) {
 	}
 
 	return p_list, nil
+}
+
+func (ps *ProductService) UpdateProduct(id int, p entities.Product) (entities.Product, error) {
+	up, err := ps.repo.UpdateProduct(id, p)
+
+	if err != nil {
+		return entities.Product{}, err
+	}
+
+	return up, nil
 }

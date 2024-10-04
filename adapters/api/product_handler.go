@@ -60,3 +60,25 @@ func (ph *ProductHandler) GetAllProducts(c *fiber.Ctx) error {
 
 	return c.JSON(products)
 }
+
+func (ph *ProductHandler) UpdateProduct(c *fiber.Ctx) error {
+	productID, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	p := new(entities.Product)
+
+	if err := c.BodyParser(p); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	product, err := ph.ProductUsecase.UpdateProduct(productID, *p)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(product)
+}

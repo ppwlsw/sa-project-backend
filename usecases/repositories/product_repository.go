@@ -6,4 +6,5 @@ type ProductRepository interface {
 	CreateProduct(p entities.Product) error
 	GetProductByID(id int) (entities.Product, error)
 	GetAllProducts() ([]entities.Product, error)
+	UpdateProduct(id int, p entities.Product) (entities.Product, error)
 }
