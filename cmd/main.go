@@ -9,6 +9,7 @@ import (
 	"github.com/ppwlsw/sa-project-backend/router"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 const (
@@ -26,15 +27,19 @@ func main() {
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
-	db, err := gorm.Open(postgres.Open(psqlInfo))
+	db, err := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
-	db.AutoMigrate(&entities.User{})
-	db.AutoMigrate(&entities.Product{})
-	db.AutoMigrate(&entities.Transaction{})
+	db.AutoMigrate(&entities.TierList{}, &entities.User{}, &entities.Product{}, &entities.Transaction{})
+	db.Create(&entities.TierList{Tier: 1, DiscountPercent: 10})
+	db.Create(&entities.TierList{Tier: 2, DiscountPercent: 20})
+	db.Create(&entities.TierList{Tier: 3, DiscountPercent: 30})
+
 	router.SetUpRouters(app, db)
 
 	app.Listen(":8000")
