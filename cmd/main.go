@@ -36,7 +36,7 @@ func main() {
 		panic("failed to connect to database")
 	}
 
-	db.AutoMigrate(&entities.User{}, &entities.Product{}, &entities.Transaction{}, &entities.Shipment{})
+	db.AutoMigrate(&entities.User{}, &entities.Product{}, &entities.Transaction{}, &entities.Shipment{}, &entities.Order{})
 	// db.Create(&entities.TierList{Tier: 1, DiscountPercent: 10})
 	// db.Create(&entities.TierList{Tier: 2, DiscountPercent: 20})
 	// db.Create(&entities.TierList{Tier: 3, DiscountPercent: 30})

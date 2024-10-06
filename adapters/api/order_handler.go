@@ -1,0 +1,84 @@
+package api
+
+import (
+	"errors"
+	"strconv"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/usecases"
+)
+
+type OrderHandler struct {
+	OrderUsecase usecases.OrderUsecase
+}
+
+func InitiateOrderHandler(orderUsecase usecases.OrderUsecase) *OrderHandler {
+	return &OrderHandler{
+		OrderUsecase: orderUsecase,
+	}
+}
+
+func (oh *OrderHandler) CreateOrder(c *fiber.Ctx) error {
+	var newOrder entities.Order
+
+	if err := c.BodyParser(&newOrder); err != nil {
+		return errors.New(err.Error())
+	}
+
+	createdOrder, err := oh.OrderUsecase.CreateOrder(newOrder)
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(createdOrder)
+}
+
+func (oh *OrderHandler) UpdateOrder(c *fiber.Ctx) error {
+	orderID, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	orderToUpdate := new(entities.Order)
+
+	if err := c.BodyParser(orderToUpdate); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	updatedOrder, err := oh.OrderUsecase.UpdateOrder(orderID, *orderToUpdate)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(updatedOrder)
+}
+
+func (oh *OrderHandler) GetOrderByID(c *fiber.Ctx) error {
+	idParams, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	order, err := oh.OrderUsecase.GetOrderByID(idParams)
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(order)
+}
+
+func (oh *OrderHandler) GetAllOrders(c *fiber.Ctx) error {
+	orders, err := oh.OrderUsecase.GetAllOrders()
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(orders)
+}
