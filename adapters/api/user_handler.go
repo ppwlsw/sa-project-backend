@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases"
 )
 
@@ -19,34 +18,17 @@ func ProvideUserHandler(userUsecase usecases.UserUseCase) *UserHandler {
 	}
 }
 
-func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
-	var newUser entities.User
-
-	if err := c.BodyParser(&newUser); err != nil {
-		return errors.New(err.Error())
-	}
-
-	if err := uh.UserUsecase.CreateUser(newUser); err != nil {
-		return errors.New(err.Error())
-	}
-
-	return c.JSON(fiber.Map{
-		"message": "Create Successfully",
-	})
-}
-
 func (uh *UserHandler) GetUserByID(c *fiber.Ctx) error {
 	idParams, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return errors.New(err.Error())
 	}
-	
+
 	user, err := uh.UserUsecase.GetUserByID(idParams)
 
 	if err != nil {
 		return errors.New(err.Error())
 	}
-
 
 	return c.JSON(user)
 
