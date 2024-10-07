@@ -25,6 +25,19 @@ func (ppr *ProductPostgresRepository) CreateProduct(p entities.Product) error {
 	return nil
 }
 
+func (ppr *ProductPostgresRepository) UpdateProduct(id int, p entities.Product) (entities.Product, error) {
+	query := "UPDATE public.products SET p_name=$2, p_description=$3, p_location=$4, p_amount=$5, p_price=$6, image_url_1=$7, image_url_2=$8, image_url_3=$9 WHERE id = $1 RETURNING id, p_name, p_description, p_location, p_amount, p_price, image_url_1, image_url_2, image_url_3;"
+	var product entities.Product
+
+	result := ppr.db.Raw(query, id, p.P_name, p.P_description, p.P_location, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3).Scan(&product)
+
+	if result.Error != nil {
+		return entities.Product{}, result.Error
+	}
+
+	return product, nil
+}
+
 func (ppr *ProductPostgresRepository) GetProductByID(id int) (entities.Product, error) {
 	var product entities.Product
 
@@ -50,17 +63,4 @@ func (ppr *ProductPostgresRepository) GetAllProducts() ([]entities.Product, erro
 	}
 
 	return products, nil
-}
-
-func (ppr *ProductPostgresRepository) UpdateProduct(id int, p entities.Product) (entities.Product, error) {
-	query := "UPDATE public.products SET p_name=$2, p_description=$3, p_location=$4, p_amount=$5, p_price=$6, image_url_1=$7, image_url_2=$8, image_url_3=$9 WHERE id = $1 RETURNING id, p_name, p_description, p_location, p_amount, p_price, image_url_1, image_url_2, image_url_3;"
-	var product entities.Product
-
-	result := ppr.db.Raw(query, id, p.P_name, p.P_description, p.P_location, p.P_amount, p.P_price, p.Image_url_1, p.Image_url_2, p.Image_url_3).Scan(&product)
-
-	if result.Error != nil {
-		return entities.Product{}, result.Error
-	}
-
-	return product, nil
 }

@@ -27,6 +27,17 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	handlers := api.ProvideHandlers(userHandler, productHandler, transactionHandler, authHandler)
 
+	shipmentRepo := database.InitiateShipmentPostgresRepository(db)
+	shipmentService := usecases.InitiateShipmentService(shipmentRepo)
+	shipmentHandler := api.InitiateShipmentHandler(shipmentService)
+
+	orderRepo := database.InitiateOrderPostgresRepository(db)
+	orderService := usecases.InitiateOrderService(orderRepo)
+	orderHandler := api.InitiateOrderHandler(orderService)
+
+	handlers := api.ProvideHandlers(userHandler, productHandler, transactionHandler, shipmentHandler, orderHandler)
+
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
@@ -51,5 +62,20 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	//Auth
 	app.Post("/register", handlers.AuthHandler.Register)
 	app.Post("/login", handlers.AuthHandler.Login)
+
+
+	//Shipment
+	app.Post("/shipment", handlers.ShipmentHandler.CreateShipment)
+	app.Post("/shipments", handlers.ShipmentHandler.CreateShipment)
+	app.Get("/shipments", handlers.ShipmentHandler.GetAllShipments)
+	app.Get("/shipment/:id", handlers.ShipmentHandler.GetShipmentByID)
+	app.Put("/shipment/:id", handlers.ShipmentHandler.UpdateShipment)
+
+	//Order
+	app.Post("/order", handlers.OrderHandler.CreateOrder)
+	app.Post("/orders", handlers.OrderHandler.CreateOrder)
+	app.Get("/orders", handlers.OrderHandler.GetAllOrders)
+	app.Get("/order/:id", handlers.OrderHandler.GetOrderByID)
+	app.Put("/order/:id", handlers.OrderHandler.UpdateOrder)
 
 }

@@ -23,17 +23,17 @@ func InitiateTransactionService(repo repositories.TransactionRepository) Transac
 }
 
 func (ts *TransactionService) CreateTransaction(t entities.Transaction) (entities.Transaction, error) {
-	t2, err := ts.repo.CreateTransaction(t)
+	ct, err := ts.repo.CreateTransaction(t)
 	if err != nil {
 		return entities.Transaction{}, err
 	}
 
-	createdTransaction, err := ts.repo.GetTransactionById(t2.Id)
+	verifiedTransaction, err := ts.repo.GetTransactionById(ct.Id)
 	if err != nil {
 		return entities.Transaction{}, err
 	}
 
-	return createdTransaction, nil
+	return verifiedTransaction, nil
 }
 
 func (ts *TransactionService) GetTransactionById(id int) (entities.Transaction, error) {

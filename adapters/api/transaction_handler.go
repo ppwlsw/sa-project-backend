@@ -35,6 +35,28 @@ func (th *TransactionHandler) CreateTransaction(c *fiber.Ctx) error {
 	return c.JSON(transaction)
 }
 
+func (th *TransactionHandler) UpdateTransaction(c *fiber.Ctx) error {
+	transactionID, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	t := new(entities.Transaction)
+
+	if err := c.BodyParser(t); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	transaction, err := th.TransactionUsecase.UpdateTransaction(transactionID, *t)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(transaction)
+}
+
 func (th *TransactionHandler) GetTransactionById(c *fiber.Ctx) error {
 	idParams, err := strconv.Atoi(c.Params("id"))
 
@@ -62,24 +84,4 @@ func (th *TransactionHandler) GetAllTransactions(c *fiber.Ctx) error {
 	return c.JSON(transactions)
 }
 
-func (th *TransactionHandler) UpdateTransaction(c *fiber.Ctx) error {
-	transactionID, err := strconv.Atoi(c.Params("id"))
 
-	if err != nil {
-		return c.SendStatus(fiber.StatusBadRequest)
-	}
-
-	t := new(entities.Transaction)
-
-	if err := c.BodyParser(t); err != nil {
-		return c.SendStatus(fiber.StatusBadRequest)
-	}
-
-	transaction, err := th.TransactionUsecase.UpdateTransaction(transactionID, *t)
-
-	if err != nil {
-		return c.SendStatus(fiber.StatusBadRequest)
-	}
-
-	return c.JSON(transaction)
-}

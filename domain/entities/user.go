@@ -1,6 +1,7 @@
 package entities
 
 type User struct {
+
 	ID           int      `json:"id" gorm:"primaryKey"`
 	CredentialID string   `json:"credential_id"`
 	Name         string   `json:"name"`
