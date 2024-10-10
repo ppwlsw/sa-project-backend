@@ -37,8 +37,12 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	packageService := usecases.InitiatePackageService(packageRepo)
 	packageHandler := api.InitiatePackageHandler(packageService)
 
+	orderLineRepo := database.InitiateOrderLinePostgresRepository(db)
+	orderLineService := usecases.InitiateOrderLineService(orderLineRepo)
+	orderLineHandler := api.InitiateOrderLineHandler(orderLineService)
+
 	handlers := api.ProvideHandlers(
-		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler)
+		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler, orderLineHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -84,5 +88,13 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/packages/:id", packageHandler.GetPackageByID)
 	app.Get("/orders/:orderID/packages", packageHandler.GetAllPackagesByOrderID)
 	app.Get("/packages", packageHandler.GetAllPackages)
+
+	//OrderLine
+	app.Post("/orderLines", orderLineHandler.CreateOrderLine)
+	app.Get("/orderLines/:id", orderLineHandler.GetOrderLineByID)
+	app.Get("/orders/:orderID/orderLines", orderLineHandler.GetOrderLinesByOrderID)
+	app.Get("orderLines", orderLineHandler.GetAllOrderLines)
+	app.Put("/orderLines/:id", orderLineHandler.UpdateOrderLine)
+	app.Delete("/orderLines/:id", orderLineHandler.DeleteOrderLine)
 
 }
