@@ -25,8 +25,6 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	authService := usecases.ProvideAuthService(userRepo)
 	authHandler := api.ProvideAuthHandler(authService)
 
-	handlers := api.ProvideHandlers(userHandler, productHandler, transactionHandler, authHandler)
-
 	shipmentRepo := database.InitiateShipmentPostgresRepository(db)
 	shipmentService := usecases.InitiateShipmentService(shipmentRepo)
 	shipmentHandler := api.InitiateShipmentHandler(shipmentService)
@@ -35,8 +33,12 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	orderService := usecases.InitiateOrderService(orderRepo)
 	orderHandler := api.InitiateOrderHandler(orderService)
 
-	handlers := api.ProvideHandlers(userHandler, productHandler, transactionHandler, shipmentHandler, orderHandler)
+	packageRepo := database.InitiatePackagePostgresRepository(db)
+	packageService := usecases.InitiatePackageService(packageRepo)
+	packageHandler := api.InitiatePackageHandler(packageService)
 
+	handlers := api.ProvideHandlers(
+		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -63,7 +65,6 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Post("/register", handlers.AuthHandler.Register)
 	app.Post("/login", handlers.AuthHandler.Login)
 
-
 	//Shipment
 	app.Post("/shipment", handlers.ShipmentHandler.CreateShipment)
 	app.Post("/shipments", handlers.ShipmentHandler.CreateShipment)
@@ -77,5 +78,11 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/orders", handlers.OrderHandler.GetAllOrders)
 	app.Get("/order/:id", handlers.OrderHandler.GetOrderByID)
 	app.Put("/order/:id", handlers.OrderHandler.UpdateOrder)
+
+	//Package
+	app.Post("/packages", packageHandler.CreatePackage)
+	app.Get("/packages/:id", packageHandler.GetPackageByID)
+	app.Get("/orders/:orderID/packages", packageHandler.GetAllPackagesByOrderID)
+	app.Get("/packages", packageHandler.GetAllPackages)
 
 }
