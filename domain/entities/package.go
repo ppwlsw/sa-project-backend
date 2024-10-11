@@ -9,6 +9,6 @@ type Package struct {
 	ProductID  *int      `json:"productID"`
 	Product    Product   `gorm:"foreignKey:ProductID"`
 	Quantity   int       `json:"quantity"`
-	Time_stamp  time.Time `json:"time_stamp"`
+	Time_stamp time.Time `json:"time_stamp"`
 	Address    string    `json:"address"`
 }
