@@ -23,19 +23,13 @@ func InitiateShipmentService(repo repositories.ShipmentRepository) ShipmentUseca
 }
 
 func (ss *ShipmentService) CreateShipment(s entities.Shipment) (entities.Shipment, error) {
-	cs, err := ss.repo.CreateShipment(s)
+	createdShipment, err := ss.repo.CreateShipment(s)
 
 	if err != nil {
 		return entities.Shipment{}, err
 	}
 
-	verifiedShipment, err := ss.repo.GetShipmentByID(cs.Id)
-
-	if err != nil {
-		return entities.Shipment{}, err
-	}
-
-	return verifiedShipment, nil
+	return createdShipment, nil
 }
 
 func (ss *ShipmentService) UpdateShipment(id int, us entities.Shipment) (entities.Shipment, error) {

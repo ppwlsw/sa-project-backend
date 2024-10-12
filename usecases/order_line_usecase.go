@@ -25,19 +25,13 @@ func InitiateOrderLineService(repo repositories.OrderLineRepository) OrderLineUs
 }
 
 func (os *OrderLineService) CreateOrderLine(ol entities.OrderLine) (entities.OrderLine, error) {
-	col, err := os.repo.CreateOrderLine(ol)
+	createdOrderLine, err := os.repo.CreateOrderLine(ol)
 
 	if err != nil {
 		return entities.OrderLine{}, nil
 	}
 
-	verifiedOrderLine, err := os.repo.GetOrderLineByID(col.Id)
-
-	if err != nil {
-		return entities.OrderLine{}, err
-	}
-
-	return verifiedOrderLine, nil
+	return createdOrderLine, nil
 }
 
 func (os *OrderLineService) UpdateOrderLine(id int, ol entities.OrderLine) (entities.OrderLine, error) {
