@@ -46,9 +46,6 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	tierListHandler := api.InitiateTierListHandler(tierListService)
 	tierListHandler.TierListUsecase.InitialTierList()
 
-	handlers := api.ProvideHandlers(
-		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler, orderLineHandler, tierListHandler)
-
 	supplierRepo := database.InitiateSupplierPostgresRepository(db)
 	supplierService := usecases.InitiateSupplierService(supplierRepo)
 	supplierHandler := api.InitiateSupplierHandler(supplierService)
@@ -61,7 +58,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 		userHandler, productHandler, transactionHandler,
 		authHandler, shipmentHandler, orderHandler,
 		packageHandler, orderLineHandler, supplierHandler,
-		supplierOrderListHandler)
+		supplierOrderListHandler, tierListHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

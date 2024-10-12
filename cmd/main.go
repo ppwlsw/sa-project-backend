@@ -46,9 +46,7 @@ func main() {
 		&entities.User{}, &entities.Product{},
 		&entities.Transaction{}, &entities.Shipment{},
 		&entities.Order{}, &entities.Package{},
-		&entities.OrderLine{}, &entities.TierList{})
-	
-
+		&entities.OrderLine{}, &entities.TierList{},
 		&entities.OrderLine{}, &entities.Supplier{},
 		&entities.SupplierOrderList{})
 
