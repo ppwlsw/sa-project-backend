@@ -41,6 +41,14 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	orderLineService := usecases.InitiateOrderLineService(orderLineRepo)
 	orderLineHandler := api.InitiateOrderLineHandler(orderLineService)
 
+	tierListRepo := database.InitiateTierListPostgres(db)
+	tierListService := usecases.InitiateTierListService(tierListRepo)
+	tierListHandler := api.InitiateTierListHandler(tierListService)
+	tierListHandler.TierListUsecase.InitialTierList()
+
+	handlers := api.ProvideHandlers(
+		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler, orderLineHandler, tierListHandler)
+
 	supplierRepo := database.InitiateSupplierPostgresRepository(db)
 	supplierService := usecases.InitiateSupplierService(supplierRepo)
 	supplierHandler := api.InitiateSupplierHandler(supplierService)
@@ -62,6 +70,10 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	//User
 	app.Get("/users", handlers.UserHandler.GetAllUsers)
 	app.Get("/users/:id", handlers.UserHandler.GetUserByID)
+	app.Put("/users/update", handlers.UserHandler.UpdateTierByUserID)
+
+	//Tier
+	app.Get("/discount/:id", handlers.TierListHandler.GetDiscountPercentByUserID)
 
 	//Product
 	app.Post("/products", handlers.ProductHandler.CreateProduct)
