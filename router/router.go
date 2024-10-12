@@ -49,6 +49,20 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler, authHandler, shipmentHandler, orderHandler, packageHandler, orderLineHandler, tierListHandler)
 
+	supplierRepo := database.InitiateSupplierPostgresRepository(db)
+	supplierService := usecases.InitiateSupplierService(supplierRepo)
+	supplierHandler := api.InitiateSupplierHandler(supplierService)
+
+	supplierOrderListRepo := database.InitiateSupplierOrderListPostgresRepository(db)
+	supplierOrderListService := usecases.InitiateSupplierOrderListService(supplierOrderListRepo)
+	supplierOrderListHandler := api.InitiateSupplierOrderListHandler(supplierOrderListService)
+
+	handlers := api.ProvideHandlers(
+		userHandler, productHandler, transactionHandler,
+		authHandler, shipmentHandler, orderHandler,
+		packageHandler, orderLineHandler, supplierHandler,
+		supplierOrderListHandler)
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
@@ -106,4 +120,16 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Put("/orderLines/:id", orderLineHandler.UpdateOrderLine)
 	app.Delete("/orderLines/:id", orderLineHandler.DeleteOrderLine)
 
+	//Supplier
+	app.Post("/suppliers", supplierHandler.CreateSupplier)
+	app.Put("/suppliers/:id", supplierHandler.UpdateSupplier)
+	app.Get("/suppliers/:id", supplierHandler.GetSupplierByID)
+	app.Get("/suppliers", supplierHandler.GetAllSuppliers)
+
+	//SupplierOrderList
+	app.Post("/supplierOrderLists", supplierOrderListHandler.CreateSupplierOrderList)
+	app.Get("/supplierOrderLists/:id", supplierOrderListHandler.GetSupplierOrderListByID)
+	app.Get("/suppliers/:supplierID/supplierOrderLists", supplierOrderListHandler.GetSupplierOrderListsBySupplierID)
+	app.Get("supplierOrderLists", supplierOrderListHandler.GetAllSupplierOrderLists)
+	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
 }

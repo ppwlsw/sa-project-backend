@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	_ "github.com/lib/pq"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/router"
@@ -22,6 +23,10 @@ const (
 
 func main() {
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE", }))
+
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -43,6 +48,10 @@ func main() {
 		&entities.Order{}, &entities.Package{},
 		&entities.OrderLine{}, &entities.TierList{})
 	
+
+		&entities.OrderLine{}, &entities.Supplier{},
+		&entities.SupplierOrderList{})
+
 
 	router.SetUpRouters(app, db)
 
