@@ -41,10 +41,8 @@ func main() {
 		&entities.User{}, &entities.Product{},
 		&entities.Transaction{}, &entities.Shipment{},
 		&entities.Order{}, &entities.Package{},
-		&entities.OrderLine{})
-	// db.Create(&entities.TierList{Tier: 1, DiscountPercent: 10})
-	// db.Create(&entities.TierList{Tier: 2, DiscountPercent: 20})
-	// db.Create(&entities.TierList{Tier: 3, DiscountPercent: 30})
+		&entities.OrderLine{}, &entities.TierList{})
+	
 
 	router.SetUpRouters(app, db)
 

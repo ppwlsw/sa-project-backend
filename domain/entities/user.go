@@ -10,6 +10,6 @@ type User struct {
 	Password     string   `json:"password"`
 	Status       string   `json:"status"`
 	Role         int      `json:"role"`
-	TierRank     int      `json:"tier_rank"` // Foreign key to TierList
+	TierRank     int      `json:"tier_rank"` 
 	TierList     TierList `gorm:"foreignKey:TierRank;references:Tier"`
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"gorm.io/gorm"
 )
@@ -28,9 +29,9 @@ func (upr *UserPostgresRepository) CreateUser(newUser *entities.User) error {
 func (upr *UserPostgresRepository) GetUserByID(id int) (*entities.User, error) {
 	var user *entities.User
 
-	query := "SELECT credential_id, name, phone_number, email, password, status, role, tier_rank FROM users WHERE id = $1"
+	query := "SELECT id, credential_id, name, phone_number, email, password, status, role, tier_rank FROM users WHERE id = $1"
 
-	result := upr.db.Raw(query, id).Scan(&user)
+	result := upr.db.Raw(query, id).Scan(user)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -40,7 +41,7 @@ func (upr *UserPostgresRepository) GetUserByID(id int) (*entities.User, error) {
 }
 
 func (upr *UserPostgresRepository) GetAllUsers() (*[]entities.User, error) {
-	query := "SELECT credential_id, name, phone_number, email, password, status, role, tier_rank FROM users"
+	query := "SELECT id, credential_id, name, phone_number, email, password, status, role, tier_rank FROM users"
 	var users *[]entities.User
 
 	result := upr.db.Raw(query).Scan(&users)
@@ -64,4 +65,16 @@ func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User
 	}
 
 	return user, nil
+}
+
+func (upr *UserPostgresRepository) UpdateUserTierByID(req *request.UpdateTierByUserIDRequest, user *entities.User) (*entities.User, error) {
+	query := "UPDATE users as u SET tier_rank=$1 WHERE u.id = $2 RETURNING id, credential_id, name, phone_number, email, password, status, role, tier_rank;"
+
+	result := upr.db.Raw(query, req.Tier, req.ID).Scan(&user)
+	if result.Error != nil {
+		return &entities.User{}, result.Error
+	}
+
+	return user, nil
+
 }

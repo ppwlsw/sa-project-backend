@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases"
 )
 
@@ -26,7 +27,7 @@ func (ah *AuthHandler) Register(c *fiber.Ctx) error {
 
 	if err := ah.AuthUsecase.Register(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Can't Create User",
+			"message": err.Error(),
 		})
 	}
 
@@ -37,10 +38,7 @@ func (ah *AuthHandler) Register(c *fiber.Ctx) error {
 }
 
 func (ah *AuthHandler) Login(c *fiber.Ctx) error {
-	var req struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
+	var req request.LoginRequest
 
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
