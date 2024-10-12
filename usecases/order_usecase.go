@@ -23,19 +23,13 @@ func InitiateOrderService(repo repositories.OrderRepository) OrderUsecase {
 }
 
 func (os *OrderService) CreateOrder(o entities.Order) (entities.Order, error) {
-	co, err := os.repo.CreateOrder(o)
+	createdOrder, err := os.repo.CreateOrder(o)
 
 	if err != nil {
 		return entities.Order{}, err
 	}
 
-	order, err := os.repo.GetOrderByID(co.Id)
-
-	if err != nil {
-		return entities.Order{}, err
-	}
-
-	return order, nil
+	return createdOrder, nil
 }
 
 func (os *OrderService) UpdateOrder(id int, o entities.Order) (entities.Order, error) {

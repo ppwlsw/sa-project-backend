@@ -23,19 +23,13 @@ func InitiatePackageService(repo repositories.PackageRepository) PackageUsecase 
 }
 
 func (ps *PackageService) CreatePackage(p entities.Package) (entities.Package, error) {
-	cp, err := ps.repo.CreatePackage(p)
+	createdPackage, err := ps.repo.CreatePackage(p)
 
 	if err != nil {
 		return entities.Package{}, err
 	}
 
-	verifiedPackage, err := ps.repo.GetPackageByID(cp.Id)
-
-	if err != nil {
-		return entities.Package{}, err
-	}
-
-	return verifiedPackage, nil
+	return createdPackage, nil
 }
 
 func (ps *PackageService) GetPackageByID(id int) (entities.Package, error) {
